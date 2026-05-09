@@ -21,6 +21,30 @@ runs, and one figure per script.
 Each script saves figures (`.pdf` + `.png`), training losses (`.npy`), and a
 model checkpoint (`.pt`) to `figures/`.
 
+### Two flavors of the FM examples: from-scratch and library-based
+
+For the two flow-matching examples, there is also a `*_meta.py` variant that
+uses Meta's [`flow_matching`](https://github.com/facebookresearch/flow_matching)
+library instead of hand-rolled interpolants and ODE solvers:
+
+| From-scratch | Library-based (`flow_matching`) |
+|---|---|
+| `examples/01_fm_two_moons.py` | `examples/01_fm_two_moons_meta.py` |
+| `examples/05_fm_compare.py` | `examples/05_fm_compare_meta.py` |
+
+The pair is meant to be read side-by-side: the from-scratch version makes the
+math (linear interpolant, target velocity, Heun integrator) explicit; the
+library version shows the same logic refactored into the standard
+`ProbPath` / `ModelWrapper` / `ODESolver` abstractions. Same hyperparameters,
+same figures, different level of abstraction.
+
+> **License note for the Meta variants.** The
+> [`flow_matching`](https://github.com/facebookresearch/flow_matching) library
+> is released under **CC-BY-NC** (Creative Commons Attribution-NonCommercial).
+> Importing it from this MIT-licensed repo is fine for research, teaching, and
+> personal use, but commercial use of the `*_meta.py` scripts is restricted by
+> Meta's license. The from-scratch versions are unrestricted MIT.
+
 ---
 
 ## Setup
@@ -34,6 +58,12 @@ adaptive ODE integration.
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+To run the optional `*_meta.py` variants (Meta's `flow_matching` library):
+
+```bash
+pip install -r requirements-meta.txt
 ```
 
 A GPU helps (especially for `04_ffjord_8gaussians.py` and `05_fm_compare.py`)
